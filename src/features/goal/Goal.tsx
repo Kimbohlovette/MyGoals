@@ -3,9 +3,10 @@ import { Pressable, StyleSheet, Text, View } from 'react-native';
 import MCIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Todo from '../todo/Todo';
 import { useAppSelector } from '../../store/hooks/index';
+import { GoalType } from '../../types';
 
-const Goal = () => {
-  const [checked, setCheckBox] = useState(false);
+const Goal = (props: { goal: GoalType }) => {
+  const [checked, setCheckBox] = useState(props.goal.done);
   const [open, toggleDropdown] = useState(false);
 
   const handleTodosDropdown = () => {
@@ -28,7 +29,7 @@ const Goal = () => {
             </Pressable>
           </View>
 
-          <Text style={styles.goalTitle}>Go to church</Text>
+          <Text style={styles.goalTitle}>{props.goal.title}</Text>
         </View>
         <View style={styles.caretContainer}>
           <Pressable
