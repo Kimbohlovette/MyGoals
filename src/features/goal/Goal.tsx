@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import MCIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Todo from '../todo/Todo';
+import { useAppSelector } from '../../store/hooks/index';
 
 const Goal = () => {
   const [checked, setCheckBox] = useState(false);
@@ -13,6 +14,7 @@ const Goal = () => {
   const handleCheck = () => {
     setCheckBox(state => !state);
   };
+  const todos = useAppSelector(state => state.todo.todos);
   return (
     <View style={styles.container}>
       <View style={styles.header}>
@@ -45,9 +47,9 @@ const Goal = () => {
         <View style={styles.todos}>
           <Text style={styles.TodosHeaderText}>Sub Tasks</Text>
           <View>
-            <Todo />
-            <Todo />
-            <Todo />
+            {todos.map((todo, key) => (
+              <Todo todo={todo} key={key} />
+            ))}
           </View>
         </View>
       )}

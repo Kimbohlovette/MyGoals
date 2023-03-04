@@ -1,9 +1,14 @@
 import React, { useState } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import MCIcon from 'react-native-vector-icons/MaterialCommunityIcons';
+import { useAppDispatch } from '../../store/hooks/index';
+import { toggleTodoState } from './todoSlice';
+import { TodoType } from '../../types';
 
-const Todo = () => {
-  const [check, toggleCheck] = useState(true);
+const Todo = (props: { todo: TodoType }) => {
+  const dispatch = useAppDispatch();
+
+  const [check, toggleCheck] = useState(props.todo.done);
   return (
     <View style={styles.container}>
       <View style={styles.subContainer}>
@@ -13,12 +18,13 @@ const Todo = () => {
             style={styles.checkBoxBtn}
             onPress={() => {
               toggleCheck(state => !state);
+              dispatch(toggleTodoState(1));
             }}>
             {check && <MCIcon name="check" color={'green'} />}
           </Pressable>
         </View>
         <View>
-          <Text>Press dresses</Text>
+          <Text>{props.todo.text}</Text>
         </View>
       </View>
       <Pressable android_ripple={{ color: 'lightgray' }} style={styles.menu}>
