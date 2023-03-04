@@ -50,7 +50,7 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   appContainer: {
-    paddingHorizontal: 16,
+    paddingHorizontal: 8,
     backgroundColor: 'white',
   },
 });
