@@ -25,14 +25,16 @@ export const goalSlice = createSlice({
     dropGoal: (state, action) => {
       state.goals = state.goals.filter(goal => goal.id !== action.payload);
     },
-    updateGoal: (state, action) => {
+    toggleGoalState: (state, action) => {
       const id = action.payload;
       const goal = state.goals.filter(gl => gl.id === id)[0];
-      goal.done = true;
-      state.goals = [...state.goals.filter(igoal => igoal.id !== id), goal];
+      if (goal) {
+        goal.done = true;
+        state.goals = [...state.goals.filter(igoal => igoal.id !== id), goal];
+      }
     },
   },
 });
 
 export default goalSlice.reducer;
-export const { addGoal, updateGoal, dropGoal } = goalSlice.actions;
+export const { addGoal, toggleGoalState, dropGoal } = goalSlice.actions;

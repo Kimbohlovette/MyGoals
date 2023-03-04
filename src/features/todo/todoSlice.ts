@@ -5,7 +5,7 @@ export interface InitialState {
   todos: TodoType[];
 }
 const initialState: InitialState = {
-  todos: [{ id: 1, text: 'Do pushups.', done: false, goalId: 1 }],
+  todos: [{ id: 2, text: 'Do pushups.', done: true, goalId: 1 }],
 };
 
 export const todoSlice = createSlice({
@@ -18,8 +18,10 @@ export const todoSlice = createSlice({
     toggleTodoState: (state, action) => {
       const id = action.payload;
       const todo = state.todos.filter(t => t.id === id)[0];
-      todo.done = !todo.done;
-      state.todos = [...state.todos.filter(t => t.id !== id), todo];
+      if (todo) {
+        todo.done = !todo.done;
+        state.todos = [...state.todos.filter(t => t.id !== id), todo];
+      }
     },
     dropTodo: (state, action) => {
       state.todos = [...state.todos.filter(todo => todo.id !== action.payload)];

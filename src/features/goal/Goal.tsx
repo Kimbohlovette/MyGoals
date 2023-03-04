@@ -2,8 +2,9 @@ import React, { useState } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import MCIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Todo from '../todo/Todo';
-import { useAppSelector } from '../../store/hooks/index';
+import { useAppSelector, useAppDispatch } from '../../store/hooks/index';
 import { GoalType } from '../../types';
+import { toggleGoalState } from './goalSlice';
 
 const Goal = (props: { goal: GoalType }) => {
   const [checked, setCheckBox] = useState(props.goal.done);
@@ -12,10 +13,15 @@ const Goal = (props: { goal: GoalType }) => {
   const handleTodosDropdown = () => {
     toggleDropdown(state => !state);
   };
+
+  const dispatch = useAppDispatch();
   const handleCheck = () => {
     setCheckBox(state => !state);
+    dispatch(toggleGoalState(props.goal.id));
   };
-  const todos = useAppSelector(state => state.todo.todos);
+  const todos = useAppSelector(state => state.todo.todos).filter(
+    todo => todo.goalId === props.goal.id,
+  );
   return (
     <View style={styles.container}>
       <View style={styles.header}>
