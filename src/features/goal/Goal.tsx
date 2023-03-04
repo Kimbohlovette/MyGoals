@@ -19,9 +19,9 @@ const Goal = (props: { goal: GoalType }) => {
     setCheckBox(state => !state);
     dispatch(toggleGoalState(props.goal.id));
   };
-  const todos = useAppSelector(state => state.todo.todos).filter(
-    todo => todo.goalId === props.goal.id,
-  );
+  const todos = useAppSelector(state => state.todo.todos)
+    .filter(todo => todo.goalId === props.goal.id)
+    .sort((a, b) => b.id - a.goalId);
   return (
     <View style={styles.container}>
       <View style={styles.header}>

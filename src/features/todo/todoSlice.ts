@@ -5,7 +5,12 @@ export interface InitialState {
   todos: TodoType[];
 }
 const initialState: InitialState = {
-  todos: [{ id: 2, text: 'Do pushups.', done: true, goalId: 1 }],
+  todos: [
+    { id: 1, text: 'Pray.', done: true, goalId: 1 },
+    { id: 2, text: 'Meditate.', done: true, goalId: 1 },
+    { id: 3, text: 'Do pushups.', done: true, goalId: 1 },
+    { id: 4, text: 'Read a book.', done: true, goalId: 1 },
+  ],
 };
 
 export const todoSlice = createSlice({
