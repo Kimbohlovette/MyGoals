@@ -18,6 +18,11 @@ buildscript {
     repositories {
         google()
         mavenCentral()
+        mavenLocal()
+        maven {
+            url 'https://maven.fabric.io/public'
+        }
+        
     }
     dependencies {
         classpath("com.android.tools.build:gradle:7.2.1")
