@@ -7,22 +7,18 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import * as React from 'react';
 import Home from './pages/Home';
+import Goals from './components/Goals';
 
 const Stack = createNativeStackNavigator();
 
 const App = () => {
   return (
     <NavigationContainer>
-      <Stack.Navigator>
+      <Stack.Navigator initialRouteName="Goals">
         <Stack.Screen name="Home" component={Home} />
+        <Stack.Screen name="Goals" component={Goals} />
       </Stack.Navigator>
     </NavigationContainer>
-
-    // <SafeAreaView>
-    //   <ScrollView style={styles.appContainer}>
-    //     <Goals />
-    //   </ScrollView>
-    // </SafeAreaView>
   );
 };
 
