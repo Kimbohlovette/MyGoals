@@ -8,13 +8,23 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import * as React from 'react';
 import Home from './pages/Home';
 import Goals from './components/Goals';
+import Icon from 'react-native-vector-icons/Ionicons';
+import { Pressable } from 'react-native';
 
 const Stack = createNativeStackNavigator();
 
 const App = () => {
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="Goals">
+      <Stack.Navigator
+        initialRouteName="Goals"
+        screenOptions={{
+          headerStyle: { backgroundColor: '#f4511e' },
+          headerTintColor: '#fff',
+          headerTitleStyle: {
+            fontWeight: '600',
+          },
+        }}>
         <Stack.Screen name="Home" component={Home} />
         <Stack.Screen name="Goals" component={Goals} />
       </Stack.Navigator>
