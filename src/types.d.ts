@@ -1,3 +1,17 @@
+import { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
+
+export type RootStackParamList = {
+  Home: undefined;
+  Goals: { userId: string };
+  AddGoal: undefined;
+};
+
+export type Props = BottomTabScreenProps<
+  RootStackParamList,
+  'Profile',
+  'Goals',
+  'AddGoal'
+>;
 export interface TodoType {
   id: number;
   text: string;
