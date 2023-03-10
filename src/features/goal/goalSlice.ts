@@ -7,11 +7,13 @@ import { AppDispatch } from '../../store/store';
 export interface InitialState {
   goals: GoalType[];
   addGoalStatus: 'idle' | 'loading' | 'fullfilled' | 'failed';
+  fetchGoalsStatus: 'idle' | 'loading' | 'fullfilled' | 'failed';
 }
 
 const initialState: InitialState = {
   goals: [],
   addGoalStatus: 'idle',
+  fetchGoalsStatus: 'idle',
 };
 
 export const addGoalAsync = createAsyncThunk(
@@ -82,6 +84,15 @@ export const goalSlice = createSlice({
       })
       .addCase(addGoalAsync.rejected, state => {
         state.addGoalStatus = 'failed';
+      })
+      .addCase(fetchGoalsAsync.pending, state => {
+        state.fetchGoalsStatus = 'loading';
+      })
+      .addCase(fetchGoalsAsync.fulfilled, state => {
+        state.fetchGoalsStatus = 'idle';
+      })
+      .addCase(fetchGoalsAsync.rejected, state => {
+        state.fetchGoalsStatus = 'failed';
       });
   },
 });

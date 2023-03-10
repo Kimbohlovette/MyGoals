@@ -15,9 +15,9 @@ export type Props = BottomTabScreenProps<
 export interface TodoType {
   text: string;
   done: boolean;
-  goalId: number;
+  goalId: string;
   id?: string;
-  dateCreated?: string;
+  dateCreated: string;
   dueDate?: string;
 }
 
@@ -26,5 +26,6 @@ export interface GoalType {
   desc: string;
   done: boolean;
   id?: string;
-  dateAdded?: string;
+  dateAdded: string;
+  dueDate: string;
 }

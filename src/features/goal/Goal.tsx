@@ -21,7 +21,7 @@ const Goal = (props: { goal: GoalType }) => {
   };
   const todos = useAppSelector(state => state.todo.todos)
     .filter(todo => todo.goalId === props.goal.id)
-    .sort((a, b) => b.id - a.goalId);
+    .sort((a, b) => (b.id ? b.id.length - a.goalId.length : 0));
   return (
     <View style={styles.container}>
       <View style={styles.header}>

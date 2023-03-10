@@ -1,16 +1,17 @@
 import React, { useState } from 'react';
 import { Button, StyleSheet, Text, TextInput, View } from 'react-native';
 import styles from '../styles/Styles';
-import { useAppDispatch } from '../store/hooks/index';
-import { addGoal } from '../features/goal/goalSlice';
+import { useAppDispatch, useAppSelector } from '../store/hooks/index';
+import { addGoalAsync } from '../features/goal/goalSlice';
 
 const AddGoal = () => {
   const [title, setTitle] = useState('');
   const [desc, setDesc] = useState('');
   const dispatch = useAppDispatch();
+  const status = useAppSelector(state => state.goal.addGoalStatus);
   const handleSubmit = () => {
     dispatch(
-      addGoal({
+      addGoalAsync({
         title: title,
         desc: desc,
         done: false,
@@ -38,7 +39,14 @@ const AddGoal = () => {
         placeholder="Describe your goal"
         style={{ ...styles.inputText, ..._styles.input }}
       />
-      <Button title="Add goal" onPress={handleSubmit} />
+      <Button
+        title="Add goal"
+        onPress={handleSubmit}
+        disabled={status === 'loading'}
+      />
+      {status === 'loading' && <Text>Create goal in progress...</Text>}
+      {status === 'failed' && <Text>Failed to create goal. Try again</Text>}
+      {status === 'idle' && <Text>Ready</Text>}
     </View>
   );
 };

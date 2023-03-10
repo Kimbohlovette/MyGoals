@@ -12,11 +12,15 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { View } from 'react-native';
 import AddGoal from './pages/AddGoal';
+import { fetchGoalsAsync } from './features/goal/goalSlice';
+import { useAppDispatch } from './store/hooks';
 
 // const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 
 const App = () => {
+  const dispatch = useAppDispatch();
+  dispatch(fetchGoalsAsync(dispatch));
   return (
     <NavigationContainer>
       {/* <Stack.Navigator
