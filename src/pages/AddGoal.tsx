@@ -11,10 +11,11 @@ const AddGoal = () => {
   const handleSubmit = () => {
     dispatch(
       addGoal({
-        id: 54,
         title: title,
         desc: desc,
         done: false,
+        dateAdded: Date(),
+        dueDate: 'April 01, 2023',
       }),
     );
   };
