@@ -15,12 +15,14 @@ export interface InitialState {
   goals: GoalType[];
   addGoalStatus: 'idle' | 'loading' | 'fullfilled' | 'failed';
   fetchGoalsStatus: 'idle' | 'loading' | 'fullfilled' | 'failed';
+  deleteGoalStatus: 'idle' | 'loading' | 'fullfilled' | 'failed';
 }
 
 const initialState: InitialState = {
   goals: [],
   addGoalStatus: 'idle',
   fetchGoalsStatus: 'idle',
+  deleteGoalStatus: 'idle',
 };
 
 // Asynchronous operations to store and firebase go here
@@ -31,6 +33,7 @@ export const addGoalAsync = createAsyncThunk(
     await addDoc(collection(db, 'goals'), goal)
       .then(res => {
         dispatch.dispatch(addGoal({ ...goal, id: res.id }));
+        console.log('Goal added!');
       })
       .catch(error => {
         console.log(error);
@@ -41,7 +44,7 @@ export const addGoalAsync = createAsyncThunk(
 export const deleteGoalAsync = createAsyncThunk(
   'goals/delete',
   async (goalId: string, dispatch) => {
-    const docRef = doc(db, goalId);
+    const docRef = doc(db, 'goals/' + goalId);
     await deleteDoc(docRef)
       .then(() => {
         dispatch.dispatch(dropGoal(goalId));
@@ -57,7 +60,7 @@ export const deleteGoalAsync = createAsyncThunk(
 export const updateGoalAsync = createAsyncThunk(
   'goals/update',
   async (goal: { id: string; status: boolean }, dispatch) => {
-    const docRef = doc(db, goal.id);
+    const docRef = doc(db, 'goals/' + goal.id);
     await updateDoc(docRef, {
       done: !goal.status,
     }).then(() => {
@@ -131,6 +134,15 @@ export const goalSlice = createSlice({
       })
       .addCase(fetchGoalsAsync.rejected, state => {
         state.fetchGoalsStatus = 'failed';
+      })
+      .addCase(deleteGoalAsync.pending, state => {
+        state.deleteGoalStatus = 'loading';
+      })
+      .addCase(deleteGoalAsync.fulfilled, state => {
+        state.deleteGoalStatus = 'idle';
+      })
+      .addCase(deleteGoalAsync.rejected, state => {
+        state.deleteGoalStatus = 'failed';
       });
   },
 });

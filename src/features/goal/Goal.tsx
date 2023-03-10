@@ -4,12 +4,13 @@ import MCIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Todo from '../todo/Todo';
 import { useAppSelector, useAppDispatch } from '../../store/hooks/index';
 import { GoalType } from '../../types';
-import { toggleGoalState } from './goalSlice';
+import { deleteGoalAsync, updateGoalAsync } from './goalSlice';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 const Goal = (props: { goal: GoalType }) => {
   const [checked, setCheckBox] = useState(props.goal.done);
   const [open, toggleDropdown] = useState(false);
-
+  const deleteStatus = useAppSelector(state => state.goal.deleteGoalStatus);
   const handleTodosDropdown = () => {
     toggleDropdown(state => !state);
   };
@@ -17,7 +18,21 @@ const Goal = (props: { goal: GoalType }) => {
   const dispatch = useAppDispatch();
   const handleCheck = () => {
     setCheckBox(state => !state);
-    dispatch(toggleGoalState(props.goal.id));
+    dispatch(
+      updateGoalAsync({
+        id: props.goal.id ? props.goal.id : '',
+        status: props.goal.done,
+      }),
+    );
+  };
+  const handleDelete = (id: string) => {
+    dispatch(deleteGoalAsync(id))
+      .then(() => {
+        console.log('Deleted!');
+      })
+      .catch(error => {
+        console.log(error);
+      });
   };
   const todos = useAppSelector(state => state.todo.todos)
     .filter(todo => todo.goalId === props.goal.id)
@@ -53,6 +68,14 @@ const Goal = (props: { goal: GoalType }) => {
       {open && (
         <View style={styles.todos}>
           <Text style={styles.TodosHeaderText}>Sub Tasks</Text>
+          <Pressable
+            disabled={deleteStatus === 'loading'}
+            onPress={() => {
+              handleDelete(props.goal.id ? props.goal.id : '');
+            }}>
+            <Icon name="delete" size={30} />
+            <Text>{deleteStatus}</Text>
+          </Pressable>
           <View>
             {todos.map((todo, key) => (
               <Todo todo={todo} key={key} />
