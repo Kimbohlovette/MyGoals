@@ -1,5 +1,12 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { addDoc, collection, getDocs } from 'firebase/firestore';
+import {
+  addDoc,
+  collection,
+  deleteDoc,
+  doc,
+  getDocs,
+  updateDoc,
+} from 'firebase/firestore';
 import db from '../../../fbConfig';
 import { GoalType } from '../../types';
 import { AppDispatch } from '../../store/store';
@@ -16,6 +23,8 @@ const initialState: InitialState = {
   fetchGoalsStatus: 'idle',
 };
 
+// Asynchronous operations to store and firebase go here
+
 export const addGoalAsync = createAsyncThunk(
   'goal/addAsync',
   async (goal: GoalType, dispatch) => {
@@ -29,6 +38,34 @@ export const addGoalAsync = createAsyncThunk(
   },
 );
 
+export const deleteGoalAsync = createAsyncThunk(
+  'goals/delete',
+  async (goalId: string, dispatch) => {
+    const docRef = doc(db, goalId);
+    await deleteDoc(docRef)
+      .then(() => {
+        dispatch.dispatch(dropGoal(goalId));
+        // @TODO delete all todos with goalId
+        console.log('Delete goal success!');
+      })
+      .catch(error => {
+        console.log(error);
+      });
+  },
+);
+
+export const updateGoalAsync = createAsyncThunk(
+  'goals/update',
+  async (goal: { id: string; status: boolean }, dispatch) => {
+    const docRef = doc(db, goal.id);
+    await updateDoc(docRef, {
+      done: !goal.status,
+    }).then(() => {
+      dispatch.dispatch(toggleGoalState(goal.id));
+    });
+  },
+);
+
 export const fetchGoalsAsync = createAsyncThunk(
   'goals/fetchGoals',
   async (dispatch: AppDispatch) => {
@@ -36,8 +73,9 @@ export const fetchGoalsAsync = createAsyncThunk(
     const docsSnapshot = await getDocs(docsRef);
 
     const goalsList: GoalType[] = [];
-    docsSnapshot.forEach(doc => {
-      const data = doc.data();
+
+    docsSnapshot.forEach(document => {
+      const data = document.data();
 
       const goal = {
         title: data.title,
@@ -45,7 +83,7 @@ export const fetchGoalsAsync = createAsyncThunk(
         done: data.done,
         dateAdded: data.dateAdded,
         dueDate: data.dueDate,
-        id: doc.id,
+        id: document.id,
       };
       goalsList.push(goal);
     });
