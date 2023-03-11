@@ -1,4 +1,12 @@
-import { createSlice } from '@reduxjs/toolkit';
+import db from '../../../fbConfig';
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import {
+  addDoc,
+  collection,
+  doc,
+  deleteDoc,
+  updateDoc,
+} from 'firebase/firestore';
 import { TodoType } from '../../types';
 
 export interface InitialState {
@@ -28,6 +36,48 @@ export const todoSlice = createSlice({
     },
   },
 });
+
+export const addTodoAsync = createAsyncThunk(
+  'todo/create',
+  async (todo: TodoType, dispatch) => {
+    await addDoc(collection(db, 'todos'), todo)
+      .then(res => {
+        dispatch.dispatch(addTodo({ ...todo, id: res.id }));
+        console.log('Goal added!');
+      })
+      .catch(error => {
+        console.log(error);
+      });
+  },
+);
+
+export const deleteTodoAsync = createAsyncThunk(
+  'goals/delete',
+  async (todoId: string, dispatch) => {
+    const docRef = doc(db, 'todos/' + todoId);
+    await deleteDoc(docRef)
+      .then(() => {
+        dispatch.dispatch(dropTodo(todoId));
+        // @TODO delete all todos with goalId
+        console.log('Delete todo success!');
+      })
+      .catch(error => {
+        console.log(error);
+      });
+  },
+);
+
+export const updateTodoAsync = createAsyncThunk(
+  'todo/update',
+  async (todo: { id: string; status: boolean }, dispatch) => {
+    const docRef = doc(db, 'todos/' + todo.id);
+    await updateDoc(docRef, {
+      done: !todo.status,
+    }).then(() => {
+      dispatch.dispatch(toggleTodoState(todo.id));
+    });
+  },
+);
 
 export default todoSlice.reducer;
 export const { addTodo, toggleTodoState, dropTodo } = todoSlice.actions;
