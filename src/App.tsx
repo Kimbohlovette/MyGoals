@@ -45,6 +45,7 @@ const App = () => {
       <Tab.Navigator
         screenOptions={{
           tabBarHideOnKeyboard: true,
+          headerShown: false,
         }}>
         <Tab.Screen
           name="Home"

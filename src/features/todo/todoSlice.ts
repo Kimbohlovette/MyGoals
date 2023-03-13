@@ -6,8 +6,10 @@ import {
   doc,
   deleteDoc,
   updateDoc,
+  getDocs,
 } from 'firebase/firestore';
 import { TodoType } from '../../types';
+import { AppDispatch } from '../../store/store';
 
 export interface InitialState {
   todos: TodoType[];
@@ -33,6 +35,9 @@ export const todoSlice = createSlice({
     },
     dropTodo: (state, action) => {
       state.todos = [...state.todos.filter(todo => todo.id !== action.payload)];
+    },
+    updateTodos: (state, action) => {
+      state.todos = action.payload;
     },
   },
 });
@@ -79,5 +84,31 @@ export const updateTodoAsync = createAsyncThunk(
   },
 );
 
+export const fetchTodosAsync = createAsyncThunk(
+  'todos/fetch',
+  async (dispatch: AppDispatch) => {
+    const docsRef = collection(db, 'todos');
+    const docsSnapshot = await getDocs(docsRef);
+
+    const todosList: TodoType[] = [];
+
+    docsSnapshot.forEach(document => {
+      const data = document.data();
+
+      const todo: TodoType = {
+        text: data.text,
+        done: data.done,
+        dateCreated: data.dateAdded,
+        dueDate: data.dueDate,
+        id: document.id,
+        goalId: data.goalId,
+      };
+      todosList.push(todo);
+    });
+    dispatch(updateTodos(todosList));
+  },
+);
+
 export default todoSlice.reducer;
-export const { addTodo, toggleTodoState, dropTodo } = todoSlice.actions;
+export const { addTodo, toggleTodoState, dropTodo, updateTodos } =
+  todoSlice.actions;
