@@ -7,6 +7,8 @@ import {
   deleteDoc,
   updateDoc,
   getDocs,
+  query,
+  where,
 } from 'firebase/firestore';
 import { TodoType } from '../../types';
 import { AppDispatch } from '../../store/store';
@@ -108,6 +110,29 @@ export const fetchTodosAsync = createAsyncThunk(
     dispatch(updateTodos(todosList));
   },
 );
+export const fetchTodosGoalIdAsync = async (goalId: string) => {
+  const todosRef = collection(db, 'todos');
+
+  const queryRes = query(todosRef, where('goalId', '==', goalId));
+  const querySnapshot = await getDocs(queryRes);
+
+  const todosList: TodoType[] = [];
+
+  querySnapshot.forEach(document => {
+    const data = document.data();
+
+    const todo: TodoType = {
+      text: data.text,
+      done: data.done,
+      dateCreated: data.dateAdded,
+      dueDate: data.dueDate,
+      id: document.id,
+      goalId: data.goalId,
+    };
+    todosList.push(todo);
+  });
+  return todosList;
+};
 
 export default todoSlice.reducer;
 export const { addTodo, toggleTodoState, dropTodo, updateTodos } =

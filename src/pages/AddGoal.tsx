@@ -36,7 +36,6 @@ const AddGoal = () => {
   };
   return (
     <View style={{ ...styles.page, ..._styles.container }}>
-      <Text>AddGoal</Text>
       <TextInput
         onBlur={() => {
           handleInputOnBlur(setTitleInputBorderOnFocus);
@@ -80,11 +79,8 @@ const AddGoal = () => {
         style={{ ...styles.buttonStyle }}
         onPress={handleSubmit}
         disabled={status === 'loading'}>
-        <Text style={{ ...styles.buttonTextStyle }}>ADD GOAL</Text>
+        <Text style={{ ...styles.buttonTextStyle }}>SAVE GOAL</Text>
       </Pressable>
-      {status === 'loading' && <Text>Create goal in progress...</Text>}
-      {status === 'failed' && <Text>Failed to create goal. Try again</Text>}
-      {status === 'idle' && <Text>Ready</Text>}
     </View>
   );
 };
@@ -94,7 +90,7 @@ export default AddGoal;
 const _styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
+    paddingVertical: 20,
   },
   input: {
     marginVertical: 16,

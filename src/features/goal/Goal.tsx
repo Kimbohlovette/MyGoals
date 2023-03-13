@@ -3,18 +3,19 @@ import { Pressable, StyleSheet, Text, View } from 'react-native';
 import MCIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Todo from '../todo/Todo';
 import { useAppSelector, useAppDispatch } from '../../store/hooks/index';
-import { GoalType } from '../../types';
+import { GoalType, TodoType } from '../../types';
 import { deleteGoalAsync, updateGoalAsync } from './goalSlice';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import { fetchTodosGoalIdAsync } from '../todo/todoSlice';
 
 const Goal = (props: { goal: GoalType }) => {
   const [checked, setCheckBox] = useState(props.goal.done);
   const [open, toggleDropdown] = useState(false);
+  const [todos, setTodos] = useState<TodoType[]>([]);
   const deleteStatus = useAppSelector(state => state.goal.deleteGoalStatus);
   const handleTodosDropdown = () => {
     toggleDropdown(state => !state);
   };
-
   const dispatch = useAppDispatch();
   const handleCheck = () => {
     setCheckBox(state => !state);
@@ -25,6 +26,10 @@ const Goal = (props: { goal: GoalType }) => {
       }),
     );
   };
+  fetchTodosGoalIdAsync(props.goal.id ? props.goal.id : '').then(resData => {
+    setTodos(resData);
+  });
+
   const handleDelete = (id: string) => {
     dispatch(deleteGoalAsync(id))
       .then(() => {
@@ -34,7 +39,8 @@ const Goal = (props: { goal: GoalType }) => {
         console.log(error);
       });
   };
-  const todos = useAppSelector(state => state.todo.todos)
+  const filteredTodo = todos
+    .slice()
     .filter(todo => todo.goalId === props.goal.id)
     .sort((a, b) => (b.id ? b.id.length - a.goalId.length : 0));
   return (
@@ -77,7 +83,7 @@ const Goal = (props: { goal: GoalType }) => {
             <Text>{deleteStatus}</Text>
           </Pressable>
           <View>
-            {todos.map((todo, key) => (
+            {filteredTodo.map((todo, key) => (
               <Todo todo={todo} key={key} />
             ))}
           </View>
