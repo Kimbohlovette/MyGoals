@@ -1,11 +1,9 @@
 import { configureStore, ThunkAction, Action } from '@reduxjs/toolkit';
 import goalSlice from '../features/goal/goalSlice';
-import todoSlice from '../features/todo/todoSlice';
 
 export const store = configureStore({
   reducer: {
     goal: goalSlice,
-    todo: todoSlice,
   },
 });
 

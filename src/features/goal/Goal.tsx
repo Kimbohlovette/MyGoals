@@ -6,29 +6,45 @@ import { useAppSelector, useAppDispatch } from '../../store/hooks/index';
 import { GoalType, TodoType } from '../../types';
 import { deleteGoalAsync, updateGoalAsync } from './goalSlice';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import { fetchTodosGoalIdAsync } from '../todo/todoSlice';
+import { useEffect } from 'react';
+import { fetchTodosGoalIdAsync } from '../todo/todoAsyncFunctions';
 
 const Goal = (props: { goal: GoalType }) => {
   const [checked, setCheckBox] = useState(props.goal.done);
   const [open, toggleDropdown] = useState(false);
   const [todos, setTodos] = useState<TodoType[]>([]);
+
+  const updateGoalStatus = useAppSelector(state => state.goal.updateGoalStatus);
   const deleteStatus = useAppSelector(state => state.goal.deleteGoalStatus);
+
   const handleTodosDropdown = () => {
     toggleDropdown(state => !state);
   };
   const dispatch = useAppDispatch();
   const handleCheck = () => {
-    setCheckBox(state => !state);
     dispatch(
       updateGoalAsync({
         id: props.goal.id ? props.goal.id : '',
         status: props.goal.done,
       }),
-    );
+    )
+      .then(() => {
+        setCheckBox(state => !state);
+      })
+      .catch(error => {
+        console.log(error);
+      });
   };
-  fetchTodosGoalIdAsync(props.goal.id ? props.goal.id : '').then(resData => {
-    setTodos(resData);
-  });
+  useEffect(() => {
+    fetchTodosGoalIdAsync(props.goal.id ? props.goal.id : '')
+      .then(resData => {
+        setTodos(resData);
+        console.log(resData);
+      })
+      .catch(error => {
+        console.log(error);
+      });
+  }, [props.goal.id]);
 
   const handleDelete = (id: string) => {
     dispatch(deleteGoalAsync(id))
@@ -49,12 +65,14 @@ const Goal = (props: { goal: GoalType }) => {
         <View style={styles.subContainer}>
           <View style={styles.checkBox}>
             <Pressable
+              disabled={updateGoalStatus === 'loading'}
               onPress={handleCheck}
               style={styles.CheckBoxBtn}
               android_ripple={{ color: '#b3b3b3' }}>
               {checked && <MCIcon name="check" color="green" size={18} />}
             </Pressable>
           </View>
+          <Text>{updateGoalStatus}</Text>
 
           <Text style={styles.goalTitle}>{props.goal.title}</Text>
         </View>

@@ -1,14 +1,30 @@
 import React, { useState } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import MCIcon from 'react-native-vector-icons/MaterialCommunityIcons';
-import { useAppDispatch } from '../../store/hooks/index';
-import { toggleTodoState } from './todoSlice';
 import { TodoType } from '../../types';
+import { updateTodoAsync } from './todoAsyncFunctions';
 
 const Todo = (props: { todo: TodoType }) => {
-  const dispatch = useAppDispatch();
-
   const [check, toggleCheck] = useState(props.todo.done);
+  const [todoUpdateState, setTodoUpdateState] = useState('idle');
+  const handleCheckBox = () => {
+    setTodoUpdateState('loading..');
+    updateTodoAsync({
+      id: props.todo.id ? props.todo.id : '',
+      status: check,
+    })
+      .then(() => {
+        toggleCheck(!check);
+        setTodoUpdateState('success');
+      })
+      .catch(error => {
+        console.log(error);
+        setTodoUpdateState('success');
+      })
+      .finally(() => {
+        setTodoUpdateState('idle');
+      });
+  };
   return (
     <View style={styles.container}>
       <View style={styles.subContainer}>
@@ -16,13 +32,11 @@ const Todo = (props: { todo: TodoType }) => {
           <Pressable
             android_ripple={{ color: 'lightgray' }}
             style={styles.checkBoxBtn}
-            onPress={() => {
-              toggleCheck(state => !state);
-              dispatch(toggleTodoState(1));
-            }}>
+            onPress={handleCheckBox}>
             {check && <MCIcon name="check" color={'green'} />}
           </Pressable>
         </View>
+        <Text>{todoUpdateState}</Text>
         <View>
           <Text>{props.todo.text}</Text>
         </View>
