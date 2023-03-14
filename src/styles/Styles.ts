@@ -1,10 +1,13 @@
 import { StyleSheet } from 'react-native';
 
 export const styles = StyleSheet.create({
+  screen: {
+    paddingHorizontal: 5,
+  },
   page: {
-    paddingHorizontal: 16,
     backgroundColor: 'white',
     flex: 1,
+    paddingVertical: 16,
   },
   inputText: {
     paddingHorizontal: 8,

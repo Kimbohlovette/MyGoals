@@ -29,7 +29,7 @@ export const goalSlice = createSlice({
     saveGoal: (state, action) => {
       state.formData.goal = action.payload;
     },
-    saveGoalTodo: (state, action) => {
+    addTodosToGoal: (state, action) => {
       state.formData.todos.push(action.payload);
     },
     addGoal: (state, action) => {
@@ -134,5 +134,11 @@ export const fetchGoalsAsync = createAsyncThunk(
 );
 
 export default goalSlice.reducer;
-export const { addGoal, toggleGoalState, dropGoal, updateGoals } =
-  goalSlice.actions;
+export const {
+  saveGoal,
+  addTodosToGoal,
+  addGoal,
+  toggleGoalState,
+  dropGoal,
+  updateGoals,
+} = goalSlice.actions;
