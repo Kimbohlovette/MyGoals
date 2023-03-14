@@ -34,11 +34,11 @@ const GoalForm = () => {
   const [show, setShow] = useState(false);
   const [date, setDate] = useState(new Date());
 
-  const day = date.getDate();
-  const month = date.getMonth();
-  const year = date.getFullYear();
+  const day = +date.getDate();
+  const month = 1 + date.getMonth();
+  const year = +date.getFullYear();
 
-  const formattedDate = day + ' / ' + month + ' / ' + year;
+  const formattedDate = day + ' - ' + month + ' - ' + year;
   const toggleDatePicker = () => setShow(!show);
   const handleSubmit = () => {
     dispatch(
@@ -51,7 +51,10 @@ const GoalForm = () => {
       }),
     );
   };
-
+  const handleOnchange = (currentDate: Date) => {
+    setDate(currentDate);
+    toggleDatePicker();
+  };
   const handleInputOnFocus = (
     dispatchFn: React.Dispatch<React.SetStateAction<string>>,
   ) => {
@@ -110,6 +113,7 @@ const GoalForm = () => {
             ..._styles.datePickerInput,
           }}
           value={formattedDate}
+          editable={false}
         />
         <Pressable
           style={_styles.datePickerBtn}
@@ -117,7 +121,13 @@ const GoalForm = () => {
           onPress={toggleDatePicker}>
           <Icon name="calendar" size={30} color={'#6ab6fc'} />
         </Pressable>
-        {show && <DateTimePicker mode={'date'} value={date} />}
+        {show && (
+          <DateTimePicker
+            mode={'date'}
+            value={date}
+            onChange={(e, d) => handleOnchange(d ? d : new Date())}
+          />
+        )}
       </View>
       <Pressable
         android_ripple={{ color: '#172852' }}
