@@ -26,6 +26,25 @@ export const styles = StyleSheet.create({
     textAlign: 'center',
     color: 'white',
   },
+  datePickerContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  datePickerInput: {
+    width: '82%',
+  },
+  datePickerBtn: {
+    backgroundColor: 'white',
+    borderWidth: 1,
+    borderColor: 'lightblue',
+    borderRadius: 8,
+    padding: 8,
+    width: '15%',
+  },
+  modal: {
+    justifyContent: 'flex-end',
+  },
 });
 
 export default styles;

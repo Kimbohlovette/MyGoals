@@ -20,11 +20,7 @@ export const GoalForm = ({ navigation }: { navigation: any }) => {
   const [show, setShow] = useState(false);
   const [date, setDate] = useState(new Date());
 
-  const day = +date.getDate();
-  const month = 1 + date.getMonth();
-  const year = +date.getFullYear();
-
-  const formattedDate = day + ' - ' + month + ' - ' + year;
+  const formattedDate = date.toLocaleDateString();
   const toggleDatePicker = () => setShow(!show);
   const handleSubmit = () => {
     // dispatch(
@@ -100,18 +96,18 @@ export const GoalForm = ({ navigation }: { navigation: any }) => {
           handleInputOnFocus(setDescInputBorderOnFocus);
         }}
       />
-      <View style={_styles.datePickerContainer}>
+      <View style={styles.datePickerContainer}>
         <TextInput
           style={{
             ...styles.inputText,
             ..._styles.input,
-            ..._styles.datePickerInput,
+            ...styles.datePickerInput,
           }}
           value={formattedDate}
           editable={false}
         />
         <Pressable
-          style={_styles.datePickerBtn}
+          style={styles.datePickerBtn}
           android_ripple={{ color: 'lightgray' }}
           onPress={toggleDatePicker}>
           <Icon name="calendar" size={30} color={'#6ab6fc'} />
@@ -145,21 +141,5 @@ const _styles = StyleSheet.create({
   input: {
     marginVertical: 16,
     width: '100%',
-  },
-  datePickerContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-  },
-  datePickerInput: {
-    width: '82%',
-  },
-  datePickerBtn: {
-    backgroundColor: 'white',
-    borderWidth: 1,
-    borderColor: 'lightblue',
-    borderRadius: 8,
-    padding: 8,
-    width: '15%',
   },
 });
