@@ -2,7 +2,7 @@ import React from 'react';
 import { StyleSheet, View } from 'react-native';
 import styles from '../styles/Styles';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { TodoForm } from './TodoForm';
+import { TodoForm } from './GoalPreview';
 import { Success } from '../components/Success';
 import GoalForm from '../components/GoalForm';
 
